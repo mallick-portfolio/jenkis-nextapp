@@ -10,7 +10,7 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 // Replace with your public repository URL
-                git url: $GIT_URL, branch: 'main'
+                echo "hello clone"
             }
         }
 
@@ -18,24 +18,24 @@ pipeline {
             steps {
                 script {
                     // Ensure Node.js version is correct (if using nvm)
-                    sh "nvm install $NODE_VERSION"
+                    echo "hello clone2"
                 }
                 // Install project dependencies
-                sh 'npm install'
+                echo "hello clone3"
             }
         }
 
         stage('Build') {
             steps {
                 // Run the Next.js build command
-                sh 'npm run build'
+                echo "hello clone4"
             }
         }
 
         stage('Test') {
             steps {
                 // Run tests (optional, if you have tests in your project)
-                sh 'npm run test'
+                echo "hello clone5"
             }
         }
 
