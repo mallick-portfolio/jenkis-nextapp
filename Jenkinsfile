@@ -14,38 +14,38 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
-            steps {
-                script {
-                    // Ensure Node.js version is correct (if using nvm)
-                    sh "nvm install $NODE_VERSION"
-                }
-                // Install project dependencies
-                sh 'npm install'
-            }
-        }
+        // stage('Install Dependencies') {
+        //     steps {
+        //         script {
+        //             // Ensure Node.js version is correct (if using nvm)
+        //             sh "nvm install $NODE_VERSION"
+        //         }
+        //         // Install project dependencies
+        //         sh 'npm install'
+        //     }
+        // }
 
-        stage('Build') {
-            steps {
-                // Run the Next.js build command
-                sh 'npm run build'
-            }
-        }
+        // stage('Build') {
+        //     steps {
+        //         // Run the Next.js build command
+        //         sh 'npm run build'
+        //     }
+        // }
 
-        stage('Test') {
-            steps {
-                // Run tests (optional, if you have tests in your project)
-                sh 'npm run test'
-            }
-        }
+        // stage('Test') {
+        //     steps {
+        //         // Run tests (optional, if you have tests in your project)
+        //         sh 'npm run test'
+        //     }
+        // }
 
-        stage('Deploy') {
-            steps {
-                // Add your deployment steps here (if deploying somewhere)
-                echo 'Deploying application...'
-                // Example: sh 'npm run deploy' or other deployment commands
-            }
-        }
+        // stage('Deploy') {
+        //     steps {
+        //         // Add your deployment steps here (if deploying somewhere)
+        //         echo 'Deploying application...'
+        //         // Example: sh 'npm run deploy' or other deployment commands
+        //     }
+        // }
     }
     
     post {
