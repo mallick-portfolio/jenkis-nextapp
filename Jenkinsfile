@@ -32,10 +32,9 @@ pipeline {
                 script {
                     withDockerRegistry(credentialsId: 'DOCKER_CREDENTIAL', url: 'https://index.docker.io/v1/') {
                         // Tag the image with the correct version before pushing
-                        sh 'docker tag tamal008/jenkins_nextapp:latest tamal008/jenkins_nextapp:1.2'
-
+                        sh 'docker tag tamal008/jenkins_nextapp:latest tamal008/jenkins_nextapp:1.3'
                         // Push the tagged image to DockerHub
-                        sh 'docker push tamal008/jenkins_nextapp:1.2'
+                        sh 'docker push tamal008/jenkins_nextapp:1.3'
                     }
                 }
             }   
@@ -45,9 +44,12 @@ pipeline {
      stage('Deploying Node App to Kubernetes') {
       steps {
         script {
-          sh "kubectl apply -f deployment.yaml"
-          sh "kubectl apply -f service.yaml"
-        }
+              sh "kubectl config use-context minikube"
+
+              // Apply Kubernetes deployment and service
+              sh "kubectl apply -f deployment.yaml --validate=false"
+              sh "kubectl apply -f service.yaml --validate=false"
+          }
       }
     }
 
