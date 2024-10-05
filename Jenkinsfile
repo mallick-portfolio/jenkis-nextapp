@@ -2,7 +2,7 @@ pipeline {
     agent any
     
     environment {
-        NODE_VERSION = '16' // Set Node.js version based on your project
+        NODE_VERSION = '20' // Set Node.js version based on your project
         GIT_URL = 'https://github.com/your-username/your-nextjs-repo.git'
     }
 
