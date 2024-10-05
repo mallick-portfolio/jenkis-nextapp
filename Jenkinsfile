@@ -21,7 +21,7 @@ pipeline {
      stage('Build Node JS Docker Image') {
             steps {
                 script {
-                  sh 'docker build -t tamal008/jenkins_nextapp:1.2 .'
+                  sh 'docker build -t tamal008/jenkins_nextapp .'
                 }
             }
         }
