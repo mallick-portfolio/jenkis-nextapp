@@ -1,61 +1,52 @@
 pipeline {
-    agent any
-
-    tools {
-        nodejs 'mynode' // The name you gave in Global Tool Configuration
-    }
-
-    stages {
-        stage('Checkout') {
-            steps {
-                // Clone the repository from GitHub
-                git branch: 'main', url: 'https://github.com/mallick-portfolio/jenkis-nextapp.git'
-            }
-        }
-
-        stage('List Files') {
-            steps {
-                sh 'ls -la'
-            }
-        }
-        
-        stage('Install Dependencies') {
-            steps {
-                // Install Node.js dependencies
-                sh 'npm install'
-            }
-        }
-        
-        stage('Build') {
-            steps {
-                // Build the Next.js app
-                sh 'npm run build'
-            }
-        }
-        
-        stage('Deploy') {
-            steps {
-                // You can define the steps to deploy your app.
-                // This depends on your deployment strategy, e.g., SSH to a server, push to a container registry, etc.
-                echo 'Deploying the application...'
-                // Example: Deploy to a server via SCP (you need to set up SSH credentials)
-                // sh 'scp -r ./* user@yourserver:/path/to/deployment'
-            }
-        }
-    }
+  agent any
+  
+   tools {nodejs "node"}
     
-    post {
-        always {
-            echo 'Cleaning up workspace...'
-            cleanWs() // Clean up the workspace after each build
+  stages {
+    stage("Clone code from GitHub") {
+            steps {
+                script {
+                    checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'GITHUB_CREDENTIALS', url: 'https://github.com/devopshint/Deploy-NodeApp-to-AWS-EKS-using-Jenkins-Pipeline']])
+                }
+            }
         }
-        
-        success {
-            echo 'Pipeline succeeded!'
-        }
-        
-        failure {
-            echo 'Pipeline failed!'
-        }
+     
+    stage('Node JS Build') {
+      steps {
+        sh 'npm install'
+      }
     }
+  
+     stage('Build Node JS Docker Image') {
+            steps {
+                script {
+                  sh 'docker build -t devopshint/node-app-1.0 .'
+                }
+            }
+        }
+
+
+        stage('Deploy Docker Image to DockerHub') {
+            steps {
+                script {
+                 withCredentials([string(credentialsId: 'devopshintdocker', variable: 'devopshintdocker')]) {
+                    sh 'docker login -u devopshint -p ${devopshintdocker}'
+            }
+            sh 'docker push devopshint/node-app-1.0'
+        }
+            }   
+        }
+         
+     stage('Deploying Node App to Kubernetes') {
+      steps {
+        script {
+          sh ('aws eks update-kubeconfig --name sample --region ap-south-1')
+          sh "kubectl get ns"
+          sh "kubectl apply -f nodejsapp.yaml"
+        }
+      }
+    }
+
+  }
 }
