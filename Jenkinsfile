@@ -12,6 +12,12 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/mallick-portfolio/jenkis-nextapp.git'
             }
         }
+
+        stage('List Files') {
+            steps {
+                sh 'ls -la'
+            }
+        }
         
         stage('Install Dependencies') {
             steps {
