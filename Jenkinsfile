@@ -44,12 +44,13 @@ pipeline {
      stage('Deploying Node App to Kubernetes') {
       steps {
         script {
-              sh "kubectl config use-context minikube"
-
-              // Apply Kubernetes deployment and service
-              sh "kubectl apply -f deployment.yaml --validate=false"
-              sh "kubectl apply -f service.yaml --validate=false"
-          }
+            // Set KUBECONFIG environment variable to Jenkins' Minikube configuration
+            withEnv(['KUBECONFIG=/var/lib/jenkins/.minikube/config']) {
+                sh "kubectl config use-context minikube"
+                sh "kubectl apply -f deployment.yaml --validate=false"
+                sh "kubectl apply -f service.yaml --validate=false"
+            }
+        }
       }
     }
 
